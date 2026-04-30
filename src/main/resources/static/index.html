@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course App</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="sidebar-title">Course App</div>
+    <nav>
+        <button class="nav-btn active" data-page="users">Usuarios</button>
+        <button class="nav-btn" data-page="categories">Categorias</button>
+        <button class="nav-btn" data-page="products">Produtos</button>
+        <button class="nav-btn" data-page="orders">Pedidos</button>
+    </nav>
+</aside>
+
+<main class="main">
+
+    <!-- ======== USERS ======== -->
+    <section id="page-users" class="page active">
+        <h1>Usuarios</h1>
+
+        <div class="card">
+            <div class="row-between">
+                <h2>Novo usuario</h2>
+                <button id="userSeedBtn" class="btn secondary">Preencher exemplo</button>
+            </div>
+            <form id="userForm" class="form">
+                <div class="grid2">
+                    <label>Nome<input id="uName" required maxlength="80" placeholder="Maria Brown" /></label>
+                    <label>Email<input id="uEmail" required type="email" placeholder="maria@gmail.com" /></label>
+                    <label>Telefone<input id="uPhone" required placeholder="988888888" /></label>
+                    <label>Senha<input id="uPassword" required type="password" placeholder="123456" /></label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Criar</button>
+                    <button type="button" id="userClearBtn" class="btn secondary">Limpar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="row-between">
+                <h2>Lista de Usuarios</h2>
+                <button id="userReloadBtn" class="btn secondary">Recarregar</button>
+            </div>
+            <div id="userStatus" class="status">Pronto.</div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Acoes</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userTbody"></tbody>
+                </table>
+            </div>
+            <p id="userEmpty" class="empty">Nenhum usuario cadastrado.</p>
+        </div>
+
+        <!-- Modal editar usuario -->
+        <div id="userModal" class="modal hidden">
+            <div class="modal-box">
+                <h3>Editar Usuario</h3>
+                <form id="userEditForm" class="form">
+                    <input type="hidden" id="euId" />
+                    <div class="grid2">
+                        <label>Nome<input id="euName" required /></label>
+                        <label>Email<input id="euEmail" required type="email" /></label>
+                        <label>Telefone<input id="euPhone" required /></label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Salvar</button>
+                        <button type="button" id="userModalClose" class="btn secondary">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== CATEGORIES ======== -->
+    <section id="page-categories" class="page">
+        <h1>Categorias</h1>
+        <p class="muted" style="margin-bottom:14px">
+            Dados populados via seed. Somente consulta disponivel.
+        </p>
+
+        <div class="card">
+            <div class="row-between">
+                <h2>Lista de Categorias</h2>
+                <button id="catReloadBtn" class="btn secondary">Recarregar</button>
+            </div>
+            <div id="catStatus" class="status">Pronto.</div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                    </tr>
+                    </thead>
+                    <tbody id="catTbody"></tbody>
+                </table>
+            </div>
+            <p id="catEmpty" class="empty">Nenhuma categoria cadastrada.</p>
+        </div>
+    </section>
+
+    <!-- ======== PRODUCTS ======== -->
+    <section id="page-products" class="page">
+        <h1>Produtos</h1>
+        <p class="muted" style="margin-bottom:14px">
+            Dados populados via seed. Somente consulta disponivel.
+        </p>
+
+        <div class="card">
+            <div class="row-between">
+                <h2>Lista de Produtos</h2>
+                <button id="productReloadBtn" class="btn secondary">Recarregar</button>
+            </div>
+            <div id="productStatus" class="status">Pronto.</div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descricao</th>
+                        <th>Preco</th>
+                        <th>Categorias</th>
+                    </tr>
+                    </thead>
+
