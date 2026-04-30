@@ -94,6 +94,10 @@ h3 {
     font-size: 1rem;
 }
 
+.muted {
+    color: var(--muted);
+}
+
 .card {
     background: rgba(18,27,46,0.80);
     border: 1px solid var(--border);
@@ -207,7 +211,7 @@ select option {
 .table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
+    min-width: 500px;
 }
 
 th,
@@ -233,10 +237,6 @@ tbody tr:hover {
     text-align: center;
     padding: 16px;
     font-size: 0.875rem;
-}
-
-.muted {
-    color: var(--muted);
 }
 
 .badge {
@@ -328,27 +328,22 @@ tbody tr:hover {
     .grid2 {
         grid-template-columns: 1fr;
     }
-
     .sidebar {
         width: 56px;
         padding: 16px 6px;
     }
-
     .sidebar-title {
         display: none;
     }
-
     .nav-btn {
         font-size: 0;
         padding: 10px;
         text-align: center;
     }
-
     .main {
         margin-left: 56px;
         padding: 16px 12px;
     }
-
     .order-detail-grid {
         grid-template-columns: 1fr;
     }
