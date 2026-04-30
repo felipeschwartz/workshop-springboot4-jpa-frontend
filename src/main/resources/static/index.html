@@ -78,7 +78,18 @@
     <!-- CATEGORIES -->
     <section id="page-categories" class="page">
         <h1>Categorias</h1>
-        <p class="muted" style="margin-bottom:14px">Dados populados via seed. Somente consulta disponivel.</p>
+        <div class="card">
+            <h2>Nova categoria</h2>
+            <form id="catForm" class="form">
+                <div class="grid2">
+                    <label>Nome<input id="catName" required placeholder="Electronics" /></label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Criar</button>
+                    <button type="button" id="catClearBtn" class="btn secondary">Limpar</button>
+                </div>
+            </form>
+        </div>
         <div class="card">
             <div class="row-between">
                 <h2>Lista de Categorias</h2>
@@ -91,14 +102,31 @@
                     <tbody id="catTbody"></tbody>
                 </table>
             </div>
-            <p id="catEmpty" class="empty">Nenhuma categoria.</p>
+            <p id="catEmpty" class="empty">Nenhuma categoria cadastrada.</p>
         </div>
     </section>
 
     <!-- PRODUCTS -->
     <section id="page-products" class="page">
         <h1>Produtos</h1>
-        <p class="muted" style="margin-bottom:14px">Dados populados via seed. Somente consulta disponivel.</p>
+        <div class="card">
+            <div class="row-between">
+                <h2>Novo produto</h2>
+                <button id="productSeedBtn" class="btn secondary">Preencher exemplo</button>
+            </div>
+            <form id="productForm" class="form">
+                <div class="grid2">
+                    <label>Nome<input id="pName" required placeholder="Smart TV" /></label>
+                    <label>Preco<input id="pPrice" required type="number" step="0.01" min="0" placeholder="2190.00" /></label>
+                    <label style="grid-column:1/-1">Descricao<input id="pDesc" required placeholder="Descricao do produto..." /></label>
+                    <label style="grid-column:1/-1">Imagem URL<input id="pImgUrl" placeholder="https://..." /></label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Criar</button>
+                    <button type="button" id="productClearBtn" class="btn secondary">Limpar</button>
+                </div>
+            </form>
+        </div>
         <div class="card">
             <div class="row-between">
                 <h2>Lista de Produtos</h2>
@@ -113,14 +141,35 @@
                     <tbody id="productTbody"></tbody>
                 </table>
             </div>
-            <p id="productEmpty" class="empty">Nenhum produto.</p>
+            <p id="productEmpty" class="empty">Nenhum produto cadastrado.</p>
         </div>
     </section>
 
     <!-- ORDERS -->
     <section id="page-orders" class="page">
         <h1>Pedidos</h1>
-        <p class="muted" style="margin-bottom:14px">Dados populados via seed. Somente consulta disponivel.</p>
+        <div class="card">
+            <h2>Novo pedido</h2>
+            <form id="orderForm" class="form">
+                <div class="grid2">
+                    <label>ID do Cliente (User)
+                        <input id="oClientId" required type="number" min="1" placeholder="1" />
+                    </label>
+                    <label>Status
+                        <select id="oStatus">
+                            <option value="1">WAITING_PAYMENT</option>
+                            <option value="2">PAID</option>
+                            <option value="3">SHIPPED</option>
+                            <option value="4">DELIVERED</option>
+                            <option value="5">CANCELED</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Criar Pedido</button>
+                </div>
+            </form>
+        </div>
         <div class="card">
             <div class="row-between">
                 <h2>Lista de Pedidos</h2>
@@ -135,7 +184,7 @@
                     <tbody id="orderTbody"></tbody>
                 </table>
             </div>
-            <p id="orderEmpty" class="empty">Nenhum pedido.</p>
+            <p id="orderEmpty" class="empty">Nenhum pedido cadastrado.</p>
         </div>
         <div id="orderModal" class="modal hidden">
             <div class="modal-box wide">

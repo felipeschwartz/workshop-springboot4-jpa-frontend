@@ -22,11 +22,8 @@ function formatMoney(value) {
 
 function formatDate(iso) {
     if (!iso) return "-";
-    try {
-        return new Date(iso).toLocaleString("pt-BR");
-    } catch (e) {
-        return String(iso);
-    }
+    try { return new Date(iso).toLocaleString("pt-BR"); }
+    catch (e) { return String(iso); }
 }
 
 var STATUS_MAP = {
@@ -56,8 +53,8 @@ function apiFetch(path, options) {
     options.headers = headers;
     return fetch(path, options).then(function(res) {
         var ct = (res.headers.get("content-type") || "").toLowerCase();
-        var bodyPromise = ct.indexOf("application/json") !== -1 ? res.json() : res.text();
-        return bodyPromise.then(function(body) {
+        var bodyP = ct.indexOf("application/json") !== -1 ? res.json() : res.text();
+        return bodyP.then(function(body) {
             if (!res.ok) {
                 var msg = typeof body === "string" ? body : JSON.stringify(body, null, 2);
                 throw new Error("HTTP " + res.status + " " + res.statusText + "\n" + msg);
@@ -89,7 +86,7 @@ navBtns.forEach(function(btn) {
 });
 
 // ============================================================
-// USERS  (GET / POST / PUT / DELETE)
+// USERS — GET, POST, PUT, DELETE
 // ============================================================
 
 var userStatus   = document.getElementById("userStatus");
@@ -105,7 +102,7 @@ function loadUsers() {
     return apiFetch("/users").then(function(data) {
         var list = Array.isArray(data) ? data : [];
         renderUsers(list);
-        setStatus(userStatus, "OK: " + list.length + " usuario(s) — " + Math.round(performance.now() - t) + " ms");
+        setStatus(userStatus, "OK: " + list.length + " usuario(s) em " + Math.round(performance.now() - t) + " ms");
     }).catch(function(err) {
         setStatus(userStatus, String(err.message || err), true);
     });
@@ -120,7 +117,7 @@ function renderUsers(list) {
         html += "<td>" + esc(u.name) + "</td>";
         html += "<td>" + esc(u.email) + "</td>";
         html += "<td>" + esc(u.phone) + "</td>";
-        html += "<td><div style='display:flex;gap:6px;'>";
+        html += "<td><div style='display:flex;gap:6px'>";
         html += "<button class='btn sm secondary' data-action='edit-user'"
             + " data-id='"    + esc(u.id)    + "'"
             + " data-name='"  + esc(u.name)  + "'"
@@ -145,7 +142,7 @@ userForm.addEventListener("submit", function(e) {
     apiFetch("/users", { method: "POST", body: payload })
         .then(function() {
             userForm.reset();
-            setStatus(userStatus, "Usuario criado com sucesso.");
+            setStatus(userStatus, "Usuario criado.");
             loadUsers();
         })
         .catch(function(err) { setStatus(userStatus, String(err.message || err), true); });
@@ -158,13 +155,8 @@ document.getElementById("userSeedBtn").addEventListener("click", function() {
     document.getElementById("uPassword").value = "123456";
 });
 
-document.getElementById("userClearBtn").addEventListener("click", function() {
-    userForm.reset();
-});
-
-document.getElementById("userReloadBtn").addEventListener("click", function() {
-    loadUsers();
-});
+document.getElementById("userClearBtn").addEventListener("click", function() { userForm.reset(); });
+document.getElementById("userReloadBtn").addEventListener("click", function() { loadUsers(); });
 
 userTbody.addEventListener("click", function(e) {
     var btn = e.target.closest("button[data-action]");
@@ -213,12 +205,13 @@ document.getElementById("userModalClose").addEventListener("click", function() {
 });
 
 // ============================================================
-// CATEGORIES  (somente GET — sem POST/PUT/DELETE no backend)
+// CATEGORIES — GET + POST (backend ja tem os dois)
 // ============================================================
 
 var catStatus = document.getElementById("catStatus");
 var catTbody  = document.getElementById("catTbody");
 var catEmpty  = document.getElementById("catEmpty");
+var catForm   = document.getElementById("catForm");
 
 function loadCategories() {
     setStatus(catStatus, "Carregando...");
@@ -231,23 +224,37 @@ function loadCategories() {
             html += "<tr><td>" + esc(c.id) + "</td><td>" + esc(c.name) + "</td></tr>";
         });
         catTbody.innerHTML = html;
-        setStatus(catStatus, "OK: " + list.length + " categoria(s) — " + Math.round(performance.now() - t) + " ms");
+        setStatus(catStatus, "OK: " + list.length + " categoria(s) em " + Math.round(performance.now() - t) + " ms");
     }).catch(function(err) {
         setStatus(catStatus, String(err.message || err), true);
     });
 }
 
-document.getElementById("catReloadBtn").addEventListener("click", function() {
-    loadCategories();
+catForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    var payload = JSON.stringify({
+        name: document.getElementById("catName").value.trim()
+    });
+    apiFetch("/categories", { method: "POST", body: payload })
+        .then(function() {
+            catForm.reset();
+            setStatus(catStatus, "Categoria criada.");
+            loadCategories();
+        })
+        .catch(function(err) { setStatus(catStatus, String(err.message || err), true); });
 });
 
+document.getElementById("catClearBtn").addEventListener("click", function() { catForm.reset(); });
+document.getElementById("catReloadBtn").addEventListener("click", function() { loadCategories(); });
+
 // ============================================================
-// PRODUCTS  (somente GET — sem POST/PUT/DELETE no backend)
+// PRODUCTS — GET + POST (backend ja tem os dois)
 // ============================================================
 
 var productStatus = document.getElementById("productStatus");
 var productTbody  = document.getElementById("productTbody");
 var productEmpty  = document.getElementById("productEmpty");
+var productForm   = document.getElementById("productForm");
 
 function loadProducts() {
     setStatus(productStatus, "Carregando...");
@@ -276,23 +283,47 @@ function loadProducts() {
             html += "</tr>";
         });
         productTbody.innerHTML = html;
-        setStatus(productStatus, "OK: " + list.length + " produto(s) — " + Math.round(performance.now() - t) + " ms");
+        setStatus(productStatus, "OK: " + list.length + " produto(s) em " + Math.round(performance.now() - t) + " ms");
     }).catch(function(err) {
         setStatus(productStatus, String(err.message || err), true);
     });
 }
 
-document.getElementById("productReloadBtn").addEventListener("click", function() {
-    loadProducts();
+productForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    var payload = JSON.stringify({
+        name:        document.getElementById("pName").value.trim(),
+        description: document.getElementById("pDesc").value.trim(),
+        price:       parseFloat(document.getElementById("pPrice").value),
+        imgUrl:      document.getElementById("pImgUrl").value.trim()
+    });
+    apiFetch("/products", { method: "POST", body: payload })
+        .then(function() {
+            productForm.reset();
+            setStatus(productStatus, "Produto criado.");
+            loadProducts();
+        })
+        .catch(function(err) { setStatus(productStatus, String(err.message || err), true); });
 });
 
+document.getElementById("productSeedBtn").addEventListener("click", function() {
+    document.getElementById("pName").value   = "Smart TV";
+    document.getElementById("pDesc").value   = "Nulla eu imperdiet purus. Maecenas ante.";
+    document.getElementById("pPrice").value  = "2190.00";
+    document.getElementById("pImgUrl").value = "";
+});
+
+document.getElementById("productClearBtn").addEventListener("click", function() { productForm.reset(); });
+document.getElementById("productReloadBtn").addEventListener("click", function() { loadProducts(); });
+
 // ============================================================
-// ORDERS  (somente GET — sem POST/PUT/DELETE no backend)
+// ORDERS — GET + POST (backend ja tem os dois)
 // ============================================================
 
 var orderStatusEl   = document.getElementById("orderStatus");
 var orderTbody      = document.getElementById("orderTbody");
 var orderEmpty      = document.getElementById("orderEmpty");
+var orderForm       = document.getElementById("orderForm");
 var orderModal      = document.getElementById("orderModal");
 var orderModalBody  = document.getElementById("orderModalBody");
 var orderModalTitle = document.getElementById("orderModalTitle");
@@ -317,15 +348,31 @@ function loadOrders() {
             html += "</tr>";
         });
         orderTbody.innerHTML = html;
-        setStatus(orderStatusEl, "OK: " + list.length + " pedido(s) — " + Math.round(performance.now() - t) + " ms");
+        setStatus(orderStatusEl, "OK: " + list.length + " pedido(s) em " + Math.round(performance.now() - t) + " ms");
     }).catch(function(err) {
         setStatus(orderStatusEl, String(err.message || err), true);
     });
 }
 
-document.getElementById("orderReloadBtn").addEventListener("click", function() {
-    loadOrders();
+orderForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    var clientId   = parseInt(document.getElementById("oClientId").value, 10);
+    var statusCode = parseInt(document.getElementById("oStatus").value, 10);
+    var payload = JSON.stringify({
+        moment:      new Date().toISOString(),
+        orderStatus: statusCode,
+        client:      { id: clientId }
+    });
+    apiFetch("/orders", { method: "POST", body: payload })
+        .then(function() {
+            orderForm.reset();
+            setStatus(orderStatusEl, "Pedido criado.");
+            loadOrders();
+        })
+        .catch(function(err) { setStatus(orderStatusEl, String(err.message || err), true); });
 });
+
+document.getElementById("orderReloadBtn").addEventListener("click", function() { loadOrders(); });
 
 orderTbody.addEventListener("click", function(e) {
     var btn = e.target.closest("button[data-action='view-order']");
